@@ -727,31 +727,5 @@ ORDER BY Satis_Adedi DESC;"""
             "agent_response": full_response, "executed_sql": sql,
             "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
             "triggered_code": "agent.py: Genel Ürün Performans Analiz Bloğu (Satır 694-738)"
-        }") for r in low_stock_items[:3]])
-                stock_warning = f"\n⚠️ **Acil Stok Uyarısı:** {stock_names} ürünlerinin stoğu kritik seviyede, tedarik sürecini hemen başlatın.\n"
-
-            full_response = f"""Ürün satış performansını analiz ettim. İşte genel tablo:
-
-**En Çok Satanlar:**
-{top_list}
-
-**En Az Satanlar:**
-{bottom_list}
-{stock_warning}
-**Önerilerim:**
-- En çok satan ürünleri mağaza girişi ve vitrine yerleştirin, online'da ana sayfada öne çıkarın.
-- En az satan ürünler için "1 alana 1 bedava" veya deneme boyu hediye kampanyası başlatın.
-- Çok satan ürünlerle az satanları paketleyerek bundle satış yapın, bu hem stok eritir hem de müşteriye değer sunar.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Genel Ürün Performans Analiz Bloğu (Satır 694-738)** tarafından üretilmiştir."""
-
-        else:
-            full_response = "Henüz satış verisi bulunamadı."
-
-        return {
-            "status": "success", "user_question": user_question,
-            "agent_response": full_response, "executed_sql": sql,
-            "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
         }
 
