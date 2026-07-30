@@ -109,12 +109,14 @@ def seed_database():
         sale_date = (start_date + timedelta(days=random.randint(0, 180))).strftime("%Y-%m-%d")
         store_id = random.choice([101, 102, 103, 104])
 
+        payment_method = random.choices(["Kart", "Nakit", "QR"], weights=[60, 30, 10])[0]
+
         cursor.execute(
             """
-            INSERT INTO sales (product_id, customer_id, quantity, sale_date, store_id)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO sales (product_id, customer_id, quantity, sale_date, store_id, payment_method)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (prod_id, cust_id, quantity, sale_date, store_id)
+            (prod_id, cust_id, quantity, sale_date, store_id, payment_method)
         )
 
     conn.commit()

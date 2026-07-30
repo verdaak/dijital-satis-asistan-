@@ -52,6 +52,7 @@ def init_db() -> None:
         quantity INTEGER NOT NULL,
         sale_date TEXT NOT NULL,
         store_id INTEGER NOT NULL,
+        payment_method TEXT NOT NULL,
         FOREIGN KEY (product_id) REFERENCES products (id),
         FOREIGN KEY (customer_id) REFERENCES customers (id)
     );
@@ -90,6 +91,7 @@ VERİTABANI ŞEMASI (SQLite):
    - quantity: INTEGER (Satılan adet)
    - sale_date: TEXT (Satış tarihi, YYYY-MM-DD)
    - store_id: INTEGER (Mağaza numarası: 101, 102, 103, 104)
+   - payment_method: TEXT (Ödeme yöntemi: 'Kart', 'Nakit', 'QR')
 
 İlişkiler:
 - sales.product_id -> products.id
