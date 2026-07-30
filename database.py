@@ -70,7 +70,7 @@ VERİTABANI ŞEMASI (SQLite):
    - id: INTEGER (Birincil Anahtar)
    - name: TEXT (Ürün adı, örn: 'Mat Ruj #101', 'Likit Fondöten Sand')
    - brand: TEXT (Marka adı: 'L'Oréal', 'Maybelline', 'MAC', 'NARS', 'Estée Lauder', 'Sephora Collection', 'Clinique', 'Fenty Beauty', 'Lancôme')
-   - category: TEXT (Kategori: 'Ruj', 'Fondöten', 'Parfüm', 'Cilt Bakımı')
+   - category: TEXT (Kategori: 'Ruj', 'Fondöten', 'Parfüm', 'Cilt Bakımı', 'Maskara')
    - price: REAL (Birim fiyat TL)
    - stock_quantity: INTEGER (Depodaki/Mağazadaki Mevcut Stok Adedi, örn: 35, 80, 150)
    - target_age_min: INTEGER (Hedef minimum yaş)

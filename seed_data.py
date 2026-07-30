@@ -4,7 +4,7 @@ from database import get_db_connection, init_db
 
 random.seed(42)
 
-CATEGORIES = ["Ruj", "Fondöten", "Parfüm", "Cilt Bakımı"]
+CATEGORIES = ["Ruj", "Fondöten", "Parfüm", "Cilt Bakımı", "Maskara"]
 
 BRANDS = [
     "MAC", "NARS", "L'Oréal", "Maybelline", 
@@ -43,6 +43,11 @@ PRODUCT_TEMPLATES = [
     ("Black Opium Style Eau De Parfum", "Parfüm", "Estée Lauder", 3850.0, 28, 20, 55),
     ("Fenty Eau De Parfum 75ml", "Parfüm", "Fenty Beauty", 4200.0, 20, 22, 45),
     ("Do Not Drink Vanilla EDP", "Parfüm", "Sephora Collection", 890.0, 130, 18, 35),
+
+    # Maskaralar
+    ("Lash Sensational Mascara", "Maskara", "Maybelline", 310.0, 150, 16, 45),
+    ("Hypnôse Drama Mascara", "Maskara", "Lancôme", 1100.0, 40, 20, 60),
+    ("Inimitable Mascara #10", "Maskara", "MAC", 980.0, 80, 18, 55),
 ]
 
 CITIES = ["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya"]
