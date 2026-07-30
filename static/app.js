@@ -191,6 +191,11 @@ function appendAgentMessage(data) {
         <div class="avatar"><i class="fa-solid fa-robot"></i></div>
         <div class="content">
             ${parsedHtml}
+            ${data.triggered_code ? `
+                <div class="triggered-code-badge" title="Tetiklenen Mantık Bloğu">
+                    <i class="fa-solid fa-code"></i> <span>Tetiklenen: ${escapeHtml(data.triggered_code)}</span>
+                </div>
+            ` : ''}
         </div>
     `;
     feed.appendChild(card);

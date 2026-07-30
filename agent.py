@@ -170,16 +170,16 @@ class SalesAnalystAgent:
     def run(self, user_question: str, history: Optional[List[Dict[str, str]]] = None) -> Dict[str, Any]:
         is_greet, greet_response = is_greeting(user_question)
         if is_greet:
-            response_text = greet_response + "\n\n---\n⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Doğal Karşılama Bloğu (Satır 171-182)** tarafından üretilmiştir."
             return {
                 "status": "success",
                 "user_question": user_question,
-                "agent_response": response_text,
+                "agent_response": greet_response,
                 "executed_sql": None,
                 "data": None,
                 "trace": [{"step": "Doğal Karşılama", "status": "info"}],
                 "attempts": 1,
-                "mode": "live" if self.engine != "demo" else "demo"
+                "mode": "live" if self.engine != "demo" else "demo",
+                "triggered_code": "agent.py: Doğal Karşılama Bloğu (Satır 171-182)"
             }
 
         # Yanlış anlama tespiti
@@ -201,10 +201,7 @@ class SalesAnalystAgent:
                     prev_question = last_user[-2] if len(last_user) >= 2 else last_user[-1]
                     prev_context += f"Siz de \"{prev_question}\" diye sormuştunuz.\n\n"
 
-            response = f"""Kusura bakın, yanlış anlamışım. {prev_context}Sorunuzu tam olarak anlayabilmem için biraz daha açar mısınız? Ne öğrenmek istediğinizi detaylı yazarsanız, size doğru analizi sunabilirim.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Yanlış Anlama Tespit Bloğu (Satır 184-219)** tarafından üretilmiştir."""
+            response = f"""Kusura bakın, yanlış anlamışım. {prev_context}Sorunuzu tam olarak anlayabilmem için biraz daha açar mısınız? Ne öğrenmek istediğinizi detaylı yazarsanız, size doğru analizi sunabilirim."""
 
             return {
                 "status": "success",
@@ -214,20 +211,19 @@ class SalesAnalystAgent:
                 "data": None,
                 "trace": [{"step": "Yanlış Anlama Tespiti - Kullanıcıdan Açıklama Bekleniyor", "status": "info"}],
                 "attempts": 1,
-                "mode": "demo"
+                "mode": "demo",
+                "triggered_code": "agent.py: Yanlış Anlama Tespit Bloğu (Satır 184-219)"
             }
 
         trace = []
 
         if self.engine == "gemini":
             res = self._run_gemini_agent(user_question, history, trace)
-            if "agent_response" in res and res["agent_response"]:
-                res["agent_response"] += "\n\n---\n⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Gemini AI Modeli (gemini-2.5-flash) ve run_sql_query Tool'u (Canlı AI - Satır 233-339)** tarafından üretilmiştir."
+            res["triggered_code"] = "agent.py: Gemini AI Modeli (gemini-2.5-flash) (Canlı AI - Satır 233-339)"
             return res
         elif self.engine == "anthropic":
             res = self._run_anthropic_agent(user_question, history, trace)
-            if "agent_response" in res and res["agent_response"]:
-                res["agent_response"] += "\n\n---\n⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Anthropic Claude Modeli (claude-3-5-sonnet) (Canlı AI - Satır 341-413)** tarafından üretilmiştir."
+            res["triggered_code"] = "agent.py: Anthropic Claude Modeli (claude-3-5-sonnet) (Canlı AI - Satır 341-413)"
             return res
         else:
             return self._run_mock_agent(user_question, history, trace)
@@ -429,16 +425,16 @@ class SalesAnalystAgent:
         # Şemada olmayan konular için uydurma engeli
         unsupported_keywords = ["personel", "çalışan", "mağaza adresi", "kâr marjı", "maliyet", "şifre", "tedarikçi telefon"]
         if any(uk in q for uk in unsupported_keywords):
-            resp_text = "Üzgünüm, bu bilgi veritabanımızda bulunmuyor. Şu anda ürünler, müşteriler ve satış işlemleri hakkında analiz yapabiliyorum. Başka bir konuda yardımcı olabilir miyim?\n\n---\n⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Şemada Olmayan Bilgi Engeli (Satır 429-442)** tarafından üretilmiştir."
             return {
                 "status": "success",
                 "user_question": user_question,
-                "agent_response": resp_text,
+                "agent_response": "Üzgünüm, bu bilgi veritabanımızda bulunmuyor. Şu anda ürünler, müşteriler ve satış işlemleri hakkında analiz yapabiliyorum. Başka bir konuda yardımcı olabilir miyim?",
                 "executed_sql": None,
                 "data": None,
                 "trace": [{"step": "Şemada Olmayan Bilgi", "status": "info"}],
                 "attempts": 1,
-                "mode": "demo"
+                "mode": "demo",
+                "triggered_code": "agent.py: Şemada Olmayan Bilgi Engeli (Satır 425-440)"
             }
 
         # Stok soruları
@@ -468,15 +464,13 @@ class SalesAnalystAgent:
 **Önerilerim:**
 - Stoğu 30'un altında olan ürünler için tedarikçinizle acil iletişime geçin.
 - Bu ürünlerin satış hızına bakarak otomatik sipariş eşiği belirlemenizi tavsiye ederim.
-- Kritik stoktaki ürünleri web sitesinde "sınırlı stok" etiketi ile göstermek aciliyet hissi yaratır ve satışı hızlandırır.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Stok Analiz Bloğu (Satır 444-482)** tarafından üretilmiştir."""
+- Kritik stoktaki ürünleri web sitesinde "sınırlı stok" etiketi ile göstermek aciliyet hissi yaratır ve satışı hızlandırır."""
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: Stok Analiz Bloğu (Satır 444-482)"
             }
 
         # Toplam satış sorusu
@@ -490,15 +484,13 @@ class SalesAnalystAgent:
 **Önerilerim:**
 - Günlük ortalama satışı hesaplayarak stok planlama takvimi oluşturun.
 - Satış adedini artırmak için "sepete 2. ürünü ekle %20 indirim kazan" gibi kampanyalar etkili olabilir.
-- Hafta sonu ve hafta içi satış dağılımını analiz ederek personel planlamanızı optimize edebilirsiniz.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Toplam Satış Analiz Bloğu (Satır 484-508)** tarafından üretilmiştir."""
+- Hafta sonu ve hafta içi satış dağılımını analiz ederek personel planlamanızı optimize edebilirsiniz."""
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: Toplam Satış Analiz Bloğu (Satır 484-508)"
             }
 
         # Yaş analizi
@@ -530,15 +522,13 @@ ORDER BY Satin_Alinan_Urun DESC;"""
 
 **Önerilerim:**
 - Her şehrin yaş profiline göre farklı ürün portföyü sunun.
-- Genç müşteri yoğun şehirlerde sosyal medya kampanyaları, olgun müşteri yoğun şehirlerde sadakat programları daha etkili olacaktır.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Müşteri Yaş Analiz Bloğu (Satır 504-539)** tarafından üretilmiştir."""
+- Genç müşteri yoğun şehirlerde sosyal medya kampanyaları, olgun müşteri yoğun şehirlerde sadakat programları daha etkili olacaktır."""
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: Müşteri Yaş Analiz Bloğu (Satır 504-539)"
             }
 
         # Marka analizi
@@ -573,17 +563,15 @@ ORDER BY Toplam_Satis_Adedi {order};"""
 - **{worst_name}** en düşük satışa sahip ({worst_qty} adet). Bu marka için şu aksiyonları değerlendirin:
   - Sosyal medyada ürün deneyim videoları paylaşın
   - Çok satan markalarla bundle paket oluşturun (örn: "{best_name} + {worst_name} seti")
-  - Mağaza içi deneme/test noktası oluşturarak müşterilerin ürünü tanımasını sağlayın
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Marka Satış Analiz Bloğu (Satır 541-580)** tarafından üretilmiştir."""
+  - Mağaza içi deneme/test noktası oluşturarak müşterilerin ürünü tanımasını sağlayın"""
             else:
                 full_response = "Marka verisi bulunamadı."
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: Marka Satış Analiz Bloğu (Satır 541-580)"
             }
 
         # Kategori / Ciro analizi
@@ -610,17 +598,15 @@ ORDER BY Toplam_Ciro_TL DESC;"""
 - **{low_cat.get('Kategori', '')}** kategorisi en düşük ciroya sahip ({low_cat.get('Toplam_Ciro_TL', 0):,.2f} TL). Şu aksiyonları deneyin:
   - Bu kategoride fiyat-performans ürünleri ekleyin
   - "Haftanın kategorisi" kampanyasıyla bu alana dikkat çekin
-  - Çok satan kategorilerle çapraz kampanya yapın (örn: "{top_cat.get('Kategori', '')} alana {low_cat.get('Kategori', '')} hediye")"
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Kategori ve Ciro Analiz Bloğu (Satır 589-623)** tarafından üretilmiştir."""
+  - Çok satan kategorilerle çapraz kampanya yapın (örn: "{top_cat.get('Kategori', '')} alana {low_cat.get('Kategori', '')} hediye")\""""
             else:
                 full_response = "Kategori verisi bulunamadı."
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: Kategori ve Ciro Analiz Bloğu (Satır 589-623)"
             }
 
         # En çok satan 5 ürün sorusu
@@ -654,17 +640,15 @@ LIMIT 5;"""
 **Tavsiyelerim:**
 - Bu 5 ürün mağazamızın lokomotifi durumunda. Ürünlerin raf ve vitrin görünürlüğünü en üst düzeyde tutalım.
 - Stoğu azalan popüler ürünlerin tedariğini önceliklendirelim.
-- Web sitesinde bu ürünleri "En Çok Satanlar" kategorisinde ilk sıralarda listeleyelim.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **En Çok Satan 5 Ürün Bloğu (Satır 625-666)** tarafından üretilmiştir."""
+- Web sitesinde bu ürünleri "En Çok Satanlar" kategorisinde ilk sıralarda listeleyelim."""
             else:
                 full_response = "Satış verisi bulunamadı."
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: En Çok Satan 5 Ürün Bloğu (Satır 625-666)"
             }
 
         # Ödeme yöntemi soruları
@@ -690,15 +674,13 @@ ORDER BY Islem_Adedi DESC;"""
 **Önerilerim:**
 - Kartla ödemelerin oranına göre bankalarla komisyon oranlarını yeniden müzakere edebilirsiniz.
 - QR/Mobil ödemeler genç kitle arasında popülerdir, bu alandaki entegrasyonları kolaylaştırmak sepet tamamlama hızını artırır.
-- Nakit işlemler için kasa mutabakat süreçlerini dijitalleştirebilirsiniz.
-
----
-⚙️ **Sistem Bilgisi:** Bu yanıt `agent.py` içindeki **Ödeme Yöntemleri Analiz Bloğu (Satır 670-692)** tarafından üretilmiştir."""
+- Nakit işlemler için kasa mutabakat süreçlerini dijitalleştirebilirsiniz."""
 
             return {
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
-                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+                "triggered_code": "agent.py: Ödeme Yöntemleri Analiz Bloğu (Satır 670-692)"
             }
 
         # Genel ürün listesi (fallback)
@@ -722,6 +704,30 @@ ORDER BY Satis_Adedi DESC;"""
             stock_warning = ""
             if low_stock_items:
                 stock_names = ", ".join([r.get("Urun_Adi", "") for r in low_stock_items[:3]])
+                stock_warning = f"\n⚠️ **Acil Stok Uyarısı:** {stock_names} ürünlerinin stoğu kritik seviyede, tedarik sürecini hemen başlatın.\n"
+
+            full_response = f"""Ürün satış performansını analiz ettim. İşte genel tablo:
+
+**En Çok Satanlar:**
+{top_list}
+
+**En Az Satanlar:**
+{bottom_list}
+{stock_warning}
+**Önerilerim:**
+- En çok satan ürünleri mağaza girişi ve vitrine yerleştirin, online'da ana sayfada öne çıkarın.
+- En az satan ürünler için "1 alana 1 bedava" veya deneme boyu hediye kampanyası başlatın.
+- Çok satan ürünlerle az satanları paketleyerek bundle satış yapın, bu hem stok eritir hem de müşteriye değer sunar."""
+
+        else:
+            full_response = "Henüz satış verisi bulunamadı."
+
+        return {
+            "status": "success", "user_question": user_question,
+            "agent_response": full_response, "executed_sql": sql,
+            "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
+            "triggered_code": "agent.py: Genel Ürün Performans Analiz Bloğu (Satır 694-738)"
+        }") for r in low_stock_items[:3]])
                 stock_warning = f"\n⚠️ **Acil Stok Uyarısı:** {stock_names} ürünlerinin stoğu kritik seviyede, tedarik sürecini hemen başlatın.\n"
 
             full_response = f"""Ürün satış performansını analiz ettim. İşte genel tablo:
