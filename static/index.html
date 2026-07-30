@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Satış Uzmanı | Kozmetik Satış Analizi</title>
+    <!-- Google Fonts Inter & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome & Chart.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Control Panel -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon glow-effect">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Dijital Satış Uzmanı</h2>
+                    <span class="sub"><i class="fa-solid fa-bolt"></i> Yapay Zeka Destekli Analiz</span>
+                </div>
+            </div>
+
+
+
+            <!-- Quick DB Stats -->
+            <div class="db-stats-widget">
+                <div class="stat-box">
+                    <span class="num" id="statProducts">23</span>
+                    <span class="lbl">Ürün</span>
+                </div>
+                <div class="stat-box">
+                    <span class="num" id="statCustomers">50</span>
+                    <span class="lbl">Müşteri</span>
+                </div>
+                <div class="stat-box">
+                    <span class="num" id="statSales">200</span>
+                    <span class="lbl">Satış</span>
+                </div>
+            </div>
+
+            <!-- Presets -->
+            <div class="presets-section">
+                <h3><i class="fa-solid fa-lightbulb"></i> Hazır Analiz Soruları</h3>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="sendPreset('En çok tercih edilen marka nedir?')">
+                        <i class="fa-solid fa-star"></i> En çok tercih edilen marka?
+                    </button>
+                    <button class="preset-btn" onclick="sendPreset('En az satan marka nedir?')">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i> En az satan marka nedir?
+                    </button>
+                    <button class="preset-btn" onclick="sendPreset('Şehirlere göre müşteri yaş ortalaması ve satın alımlar')">
+                        <i class="fa-solid fa-city"></i> Şehirlere göre yaş & satış
+                    </button>
+                    <button class="preset-btn" onclick="sendPreset('Kategorilere göre toplam ciro dağılımı nedir?')">
+                        <i class="fa-solid fa-chart-pie"></i> Kategorilere göre toplam ciro
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="action-btn key-btn" onclick="openKeyModal()">
+                    <i class="fa-solid fa-key"></i> API Anahtarı Gir (Ücretsiz)
+                </button>
+                <button class="action-btn secondary" onclick="openSchemaModal()">
+                    <i class="fa-solid fa-database"></i> Veritabanı Şeması
+                </button>
+                <button class="action-btn danger" onclick="testSecurityFilter()">
+                    <i class="fa-solid fa-ban"></i> Güvenlik Filtresi Test Et
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-info">
+                    <h1>Kozmetik Mağazası Satış Analiz Platformu</h1>
+                    <p>Doğal dilde soru sorun, agent SQL çalıştırıp görselleştirmeleri ve iş önerilerini sunsun.</p>
+                </div>
+                <div class="header-right">
+                    <button class="key-status-pill" onclick="openKeyModal()" id="apiKeyPill">
+                        <i class="fa-solid fa-key"></i> <span id="apiModeText">API Anahtarı Gir</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Workspace -->
+            <div class="workspace">
+                <!-- Chat Feed -->
+                <div class="chat-feed" id="chatFeed">
+                    <div class="welcome-placeholder" id="welcomePlaceholder">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <h2>Dijital Asistana Hoşgeldiniz</h2>
+                    </div>
+                </div>
+
+                <!-- Result Display Panel -->
+                <div class="result-display-panel hidden" id="resultDisplayPanel">
+                    <div class="panel-header">
+                        <div class="tabs">
+                            <button class="tab-btn active" onclick="switchTab('chart')"><i class="fa-solid fa-chart-column"></i> Görsel Grafik</button>
+                            <button class="tab-btn" onclick="switchTab('table')"><i class="fa-solid fa-table"></i> Ham Veri Tablosu</button>
+                            <button class="tab-btn" onclick="switchTab('sql')"><i class="fa-solid fa-code"></i> Üretilen SQL</button>
+                            <button class="tab-btn" onclick="switchTab('trace')"><i class="fa-solid fa-list-check"></i> Agent Adımları</button>
+                        </div>
+                        <div class="panel-tools">
+                            <button class="tool-btn" onclick="copySQL()"><i class="fa-regular fa-copy"></i> SQL Kopyala</button>
+                            <button class="tool-btn" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> CSV İndir</button>
+                        </div>
+                    </div>
+
+                    <div class="tab-content active" id="tabChart">
+                        <div class="chart-container">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tabTable">
+                        <div class="table-responsive" id="tableContainer"></div>
+                    </div>
+
+                    <div class="tab-content" id="tabSQL">
+                        <div class="sql-viewer">
+                            <pre><code id="sqlCodeText">-- SQL Sorgusu Bekleniyor...</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tabTrace">
+                        <div class="trace-timeline" id="traceContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="input-container">
+                <form id="chatForm" onsubmit="handleFormSubmit(event)">
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                        <input type="text" id="userInput" placeholder="Örn: 'En çok tercih edilen marka nedir?' veya 'İyi akşamlar'..." autocomplete="off">
+                        <button type="submit" id="sendBtn" class="send-btn">
+                            <span>Gönder</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- API Key Modal -->
+    <div class="modal-overlay hidden" id="keyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-key" style="color: #f59e0b;"></i> API Anahtarı Tanımla</h3>
+                <button class="close-btn" onclick="closeKeyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">
+                    Yapay zeka ile canlı ve tamamen dinamik satış analizi yapabilirsiniz.
+                </p>
+                <p style="font-size: 13px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 10px; border-radius: 8px; color: #6ee7b7; margin-bottom: 16px;">
+                    💡 <strong>Ücretsiz API Key Alın:</strong> <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #6ee7b7; font-weight:700; text-decoration:underline;">Google AI Studio</a> sayfasından 10 saniyede ücretsiz Gemini API anahtarı alıp buraya yapıştırabilirsiniz.
+                </p>
+                <div class="input-group">
+                    <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:#a5b4fc;">GEMINI API KEY (AIzaSy...)</label>
+                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border-color); background:#050811; color:#fff; font-family:var(--font-code);">
+                </div>
+                <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+                    <button class="action-btn secondary" onclick="closeKeyModal()">Vazgeç</button>
+                    <button class="action-btn key-btn" onclick="saveApiKey()">Kaydet & Yapay Zeka Başlat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schema Modal -->
+    <div class="modal-overlay hidden" id="schemaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-database" style="color: var(--accent-cyan);"></i> Veritabanı Şeması & Tablo Yapısı</h3>
+                <button class="close-btn" onclick="closeSchemaModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre id="schemaText">Yükleniyor...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
