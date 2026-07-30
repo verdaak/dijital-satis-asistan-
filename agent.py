@@ -598,6 +598,47 @@ ORDER BY Toplam_Ciro_TL DESC;"""
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
             }
 
+        # En çok satan 5 ürün sorusu
+        if "en çok satan 5" in q or "en çok satan beş" in q:
+            sql = """SELECT p.name AS Urun_Adi, p.brand AS Marka, p.category AS Kategori, SUM(s.quantity) AS Satis_Adedi, p.stock_quantity AS Stok
+FROM sales s
+JOIN products p ON s.product_id = p.id
+GROUP BY p.id
+ORDER BY Satis_Adedi DESC
+LIMIT 5;"""
+            sql_result = run_sql_query(sql)
+            rows = sql_result.get("rows", [])
+
+            if rows:
+                top_list = "\n".join([f"{i+1}. **{r.get('Urun_Adi', '')}** ({r.get('Marka', '')}): {r.get('Satis_Adedi', 0)} adet satış, güncel stok {r.get('Stok', 0)} adet" for i, r in enumerate(rows)])
+                
+                # Kritik stok kontrolü
+                critical_stock_alerts = []
+                for r in rows:
+                    if r.get("Stok", 100) < 30:
+                        critical_stock_alerts.append(r.get("Urun_Adi", ""))
+
+                stock_warning = ""
+                if critical_stock_alerts:
+                    stock_warning = f"\n⚠️ **Acil Stok Uyarısı:** En çok satanlarımızdan olan *{', '.join(critical_stock_alerts)}* ürününün stoğu 30'un altına inmiş durumda! Satış kaybetmemek için acilen sipariş geçilmeli.\n"
+
+                full_response = f"""En çok satan ilk 5 ürünümüzün performans verileri şu şekilde:
+
+{top_list}
+{stock_warning}
+**Tavsiyelerim:**
+- Bu 5 ürün mağazamızın lokomotifi durumunda. Ürünlerin raf ve vitrin görünürlüğünü en üst düzeyde tutalım.
+- Stoğu azalan popüler ürünlerin tedariğini önceliklendirelim.
+- Web sitesinde bu ürünleri "En Çok Satanlar" kategorisinde ilk sıralarda listeleyelim."""
+            else:
+                full_response = "Satış verisi bulunamadı."
+
+            return {
+                "status": "success", "user_question": user_question,
+                "agent_response": full_response, "executed_sql": sql,
+                "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo"
+            }
+
         # Genel ürün listesi (fallback)
         sql = """SELECT p.name AS Urun_Adi, p.brand AS Marka, p.category AS Kategori, SUM(s.quantity) AS Satis_Adedi, p.stock_quantity AS Stok
 FROM sales s
