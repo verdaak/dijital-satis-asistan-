@@ -32,9 +32,7 @@ VERİTABANI ŞEMASI:
 
 KESİN VE ESNETİLEMEZ KURALLAR:
 1. YALNIZCA 'SELECT' sorguları üretebilirsin. INSERT, UPDATE, DELETE, DROP KESİNLİKLE YASAKTIR.
-2. Sorgularında JOIN işlemleri yaparken tablo ilişkilerini dikkate al:
-   - sales.product_id = products.id
-   - sales.customer_id = customers.id
+2. sorgular oluşturuken özellikle veritabanı şemasına bakarak joinleme yap
 3. KESİN GERÇEK SAYI VE VERİ KURALI:
    - 'run_sql_query' tool'undan dönen sayısal verileri KESİNLİKLE BİREBİR KULLAN! Asla uydurma sayılar yazma!
 4. BİLMİYORUM VE ŞEMADA YOK KURALI:
@@ -179,7 +177,7 @@ class SalesAnalystAgent:
                 "trace": [{"step": "Doğal Karşılama", "status": "info"}],
                 "attempts": 1,
                 "mode": "live" if self.engine != "demo" else "demo",
-                "triggered_code": "agent.py: Doğal Karşılama Bloğu (Satır 171-182)"
+                "triggered_code": "agent.py: Doğal Karşılama Bloğu"
             }
 
         # Yanlış anlama tespiti
@@ -212,18 +210,18 @@ class SalesAnalystAgent:
                 "trace": [{"step": "Yanlış Anlama Tespiti - Kullanıcıdan Açıklama Bekleniyor", "status": "info"}],
                 "attempts": 1,
                 "mode": "demo",
-                "triggered_code": "agent.py: Yanlış Anlama Tespit Bloğu (Satır 184-219)"
+                "triggered_code": "agent.py: Yanlış Anlama Tespit Bloğu"
             }
 
         trace = []
 
         if self.engine == "gemini":
             res = self._run_gemini_agent(user_question, history, trace)
-            res["triggered_code"] = "agent.py: Gemini AI Modeli (gemini-2.5-flash) (Canlı AI - Satır 233-339)"
+            res["triggered_code"] = "agent.py: Gemini AI Modeli (gemini-2.5-flash)"
             return res
         elif self.engine == "anthropic":
             res = self._run_anthropic_agent(user_question, history, trace)
-            res["triggered_code"] = "agent.py: Anthropic Claude Modeli (claude-3-5-sonnet) (Canlı AI - Satır 341-413)"
+            res["triggered_code"] = "agent.py: Anthropic Claude Modeli (claude-3-5-sonnet)"
             return res
         else:
             return self._run_mock_agent(user_question, history, trace)
@@ -434,7 +432,7 @@ class SalesAnalystAgent:
                 "trace": [{"step": "Şemada Olmayan Bilgi", "status": "info"}],
                 "attempts": 1,
                 "mode": "demo",
-                "triggered_code": "agent.py: Şemada Olmayan Bilgi Engeli (Satır 425-440)"
+                "triggered_code": "agent.py: Şemada Olmayan Bilgi Engeli"
             }
 
         # Stok soruları
@@ -470,7 +468,7 @@ class SalesAnalystAgent:
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: Stok Analiz Bloğu (Satır 444-482)"
+                "triggered_code": "agent.py: Stok Analiz Bloğu"
             }
 
         # Toplam satış sorusu
@@ -490,7 +488,7 @@ class SalesAnalystAgent:
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: Toplam Satış Analiz Bloğu (Satır 484-508)"
+                "triggered_code": "agent.py: Toplam Satış Analiz Bloğu"
             }
 
         # Yaş analizi
@@ -528,7 +526,7 @@ ORDER BY Satin_Alinan_Urun DESC;"""
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: Müşteri Yaş Analiz Bloğu (Satır 504-539)"
+                "triggered_code": "agent.py: Müşteri Yaş Analiz Bloğu"
             }
 
         # Marka analizi
@@ -571,7 +569,7 @@ ORDER BY Toplam_Satis_Adedi {order};"""
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: Marka Satış Analiz Bloğu (Satır 541-580)"
+                "triggered_code": "agent.py: Marka Satış Analiz Bloğu"
             }
 
         # Kategori / Ciro analizi
@@ -606,7 +604,7 @@ ORDER BY Toplam_Ciro_TL DESC;"""
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: Kategori ve Ciro Analiz Bloğu (Satır 589-623)"
+                "triggered_code": "agent.py: Kategori ve Ciro Analiz Bloğu"
             }
 
         # En çok satan 5 ürün sorusu
@@ -648,7 +646,7 @@ LIMIT 5;"""
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: En Çok Satan 5 Ürün Bloğu (Satır 625-666)"
+                "triggered_code": "agent.py: En Çok Satan 5 Ürün Bloğu"
             }
 
         # Ödeme yöntemi soruları
@@ -680,7 +678,7 @@ ORDER BY Islem_Adedi DESC;"""
                 "status": "success", "user_question": user_question,
                 "agent_response": full_response, "executed_sql": sql,
                 "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-                "triggered_code": "agent.py: Ödeme Yöntemleri Analiz Bloğu (Satır 670-692)"
+                "triggered_code": "agent.py: Ödeme Yöntemleri Analiz Bloğu"
             }
 
         # Genel ürün listesi (fallback)
@@ -726,6 +724,6 @@ ORDER BY Satis_Adedi DESC;"""
             "status": "success", "user_question": user_question,
             "agent_response": full_response, "executed_sql": sql,
             "data": sql_result, "trace": trace, "attempts": 1, "mode": "demo",
-            "triggered_code": "agent.py: Genel Ürün Performans Analiz Bloğu (Satır 694-738)"
+            "triggered_code": "agent.py: Genel Ürün Performans Analiz Bloğu"
         }
 

@@ -189,11 +189,14 @@ function appendAgentMessage(data) {
 
     card.innerHTML = `
         <div class="avatar"><i class="fa-solid fa-robot"></i></div>
-        <div class="content">
-            ${parsedHtml}
+        <div class="agent-message-wrapper">
+            <div class="content">
+                ${parsedHtml}
+            </div>
             ${data.triggered_code ? `
-                <div class="triggered-code-badge" title="Tetiklenen Mantık Bloğu">
-                    <i class="fa-solid fa-code"></i> <span>Tetiklenen: ${escapeHtml(data.triggered_code)}</span>
+                <div class="triggered-code-box">
+                    <div class="box-header"><i class="fa-solid fa-code"></i> Tetiklenen Kod</div>
+                    <div class="box-content">${escapeHtml(data.triggered_code)}</div>
                 </div>
             ` : ''}
         </div>
