@@ -7,6 +7,7 @@ Doğal dilde sorulan kozmetik satış sorularını SQLite veritabanı üzerinden
 ## ✨ Özellikler
 
 * **Doğal Dilden SQL'e (Text-to-SQL):** Yapay zeka entegrasyonu sayesinde teknik bilgi gerektirmeden veritabanınızdan veri çekebilirsiniz.
+* **Dinamik Veri Analizi ve Tablo Birleştirme (Table Join):** Asistan, kullanıcının sorularına göre veritabanı şemasını inceleyerek dinamik olarak `customers`, `sales`, `products` gibi tabloları `JOIN` sorgularıyla birleştirir. Bu sayede ilişkisel verilerden anlık, çok boyutlu ve esnek raporlar üretebilir.
 * **Veriye Dayalı Akıllı İş Önerileri:** 
   - Çok satan ürünler tespit edildiğinde tedarik ve vitrin önerileri sunar.
   - Az satan ürünler tespit edildiğinde promosyon ve influencer pazarlama fikirleri üretir.
